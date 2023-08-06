@@ -16,23 +16,23 @@ function threeSum(nums) {
 	const result = [];
 	//* Sort the input array in-place and ascending order
 	nums = nums.sort((a, b) => a - b);
-	//* Loop through the array
+	//* Loop through the array starting from the first element and ending at the third last element (nums.length - 2 is to make sure that we have at least 3 elements to form a triplet)
 	for (let i = 0; i < nums.length - 2; i++) {
-		//* Skip duplicates for i
+		//* Skip duplicates for i (i > 0 is to make sure that we do not skip the first element) (nums[i] === nums[i - 1] is to make sure that we do not skip the first duplicate)
 		if (i > 0 && nums[i] === nums[i - 1]) continue;
-		//* Create two pointers j and k
+		//* Create two pointers j and k to point to the next element after i and the last element of the array respectively
 		let j = i + 1;
 		let k = nums.length - 1;
 
 		while (j < k) {
 			let sum = nums[i] + nums[j] + nums[k];
-			//* If sum is 0, push the triplet to the result array
+			//* If sum is 0, push the triplet to the result array and increment j and decrement k
 			if (sum === 0) {
 				result.push([nums[i], nums[j], nums[k]]);
 				j++;
 				k--;
 
-				//* Skip duplicates
+				//* Skip duplicates for j and k (j < k is to make sure that j and k do not cross each other)
 				while (j < k && nums[j] === nums[j - 1]) j++;
 				while (j < k && nums[k] === nums[k + 1]) k--;
 				//* If sum is less than 0, increment j
@@ -88,3 +88,38 @@ console.log(threeSumHash([-1, 0, 1, 2, -1, -4])); //* O/P: [ [ -1, -1, 2 ], [ -1
 //? What is the time complexity of this solution? O(n^2) - We are looping through the array and for each element we are looping through the rest of the array
 
 //? What is the difference between the two solutions? The first solution is more efficient in terms of space complexity but the second solution is more efficient in terms of time complexity
+
+//* Get those reps in
+
+function threeSumRep(nums) {
+	const result = [];
+	nums = nums.sort((a, b) => a - b);
+
+	for (let i = 0; i < nums.length - 2; i++) {
+		if (i > 0 && nums[i] === nums[i - 1]) continue;
+
+		let j = i + 1;
+		let k = nums.length - 1;
+
+		while (j < k) {
+			let sum = nums[i] + nums[j] + nums[k];
+
+			if (sum === 0) {
+				result.push([nums[i], nums[j], nums[k]]);
+				j++;
+				k--;
+
+				while (j < k && nums[j] === nums[j - 1]) j++;
+				while (j < k && nums[k] === nums[k - 1]) k--;
+			} else if (sum < 0) {
+				j++;
+			} else {
+				k--;
+			}
+		}
+	}
+
+	return result;
+}
+
+console.log(threeSumRep([-1, 0, 1, 2, -1, -4]));
